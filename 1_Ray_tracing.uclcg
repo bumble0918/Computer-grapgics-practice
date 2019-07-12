@@ -38,7 +38,6 @@ struct Material {
 	// High glossiness value, sharp and small highlights; Low glossiness value, blurred and large highlights
     float glossiness;
 #ifdef SOLUTION_MATERIAL
-	// Put the variables for reflection and refraction here
 	float ReflectionWeight; // Decide the light amount remained after reflection  
 	float RefractionWeight; // Decide the light amount remained after refraction
 	float IOR; // Index of Refraction
@@ -177,8 +176,6 @@ HitInfo intersectSphere(const Ray ray, const Sphere sphere, const float tMin, co
 
 HitInfo intersectPlane(const Ray ray,const Plane plane, const float tMin, const float tMax) {
 #ifdef SOLUTION_CYLINDER_AND_PLANE
-	// Add your plane intersection code here
-	
 	// The equation of a plane is: A * (x - x0) + B * (y - y0) + C * (z - z0) = 0
 	// Where [A, B, C] is the direction vector of this plane
 	// And [x0, y0, z0] is the intersection point of this plane and the direction
@@ -214,8 +211,6 @@ float lengthSquared(vec3 x) {
 
 HitInfo intersectCylinder(const Ray ray, const Cylinder cylinder, const float tMin, const float tMax) {
 #ifdef SOLUTION_CYLINDER_AND_PLANE
-	// Add your cylinder intersection code here
-	
 	// The equation of cylinder is derived by the principle that
 	// The length of the line between the cylinder position and the intersection position, multipled by sin(theta)
 	// can obtain the cylinder radius, and cos(theta) is the dot product of the line and the cylinder direction divided by their norms  
@@ -300,8 +295,6 @@ vec3 shadeFromLight(
 	float specular_term  = pow(max(0.0, dot(lightDirection, reflectedDirection)), hit_info.material.glossiness);
 
 #ifdef SOLUTION_SHADOW
-	// Put your shadow test here
-	
 	// Generate a new ray traced from the intersection point back to the light position
 	// If the new ray is intersected with other objects, the intersection position should be shadowed
 	Ray shadowRay;
@@ -369,7 +362,6 @@ Ray getFragCoordRay(const vec2 frag_coord) {
 
 float fresnel_1(const Ray ray, const HitInfo hitInfo, float currentIOR, float nextIOR){
 #ifdef SOLUTION_FRESNEL
-	// Put your code to compute the Fresnel effect here
 	float n1 = currentIOR; // The index of refraction in the media being left
 	float n2 = nextIOR; // The index of refraction in the media being entered
 	float cos1 = dot(-ray.direction, hitInfo.normal); // the angle between the insight and the normal at the hit point
@@ -398,7 +390,6 @@ float fresnel_1(const Ray ray, const HitInfo hitInfo, float currentIOR, float ne
 
 float fresnel_2(const Ray ray, const HitInfo hitInfo, float currentIOR, float nextIOR){
 #ifdef SOLUTION_FRESNEL
-	// Put your code to compute the Fresnel effect here
 	// Schlick aproximation
 	float n1 = currentIOR; // The index of refraction in the media being left
 	float n2 = nextIOR; // The index of refraction in the media being entered
@@ -446,7 +437,6 @@ vec3 colorForFragment(const Scene scene, const vec2 fragCoord) {
 		if (!currentHitInfo.hit) break;
       
 #ifdef SOLUTION_REFLECTION_REFRACTION
-		// Put your reflection weighting code here
 		reflectionWeight *= currentHitInfo.material.ReflectionWeight;
 		if(reflectionWeight == 0.0) break;
 #endif
@@ -461,7 +451,6 @@ vec3 colorForFragment(const Scene scene, const vec2 fragCoord) {
 #endif
       	Ray nextRay;	
 #ifdef SOLUTION_REFLECTION_REFRACTION
-		// Put your code to compute the reflection ray here	
 		nextRay.origin = currentHitInfo.position;
 		// The reflection ray has a symmetric direction with the insight ray about the hit normal
 		nextRay.direction = currentRay.direction - 2.0 * currentHitInfo.normal * dot(currentHitInfo.normal,currentRay.direction);
@@ -492,7 +481,6 @@ vec3 colorForFragment(const Scene scene, const vec2 fragCoord) {
   	for(int i = 0; i < maxRefractionStepCount; i++) {
       
 #ifdef SOLUTION_REFLECTION_REFRACTION
-		// Put your refraction weighting code here
 		refractionWeight *= currentHitInfo.material.RefractionWeight; 
 		if(refractionWeight == 0.0) break;
 #else
@@ -508,7 +496,6 @@ vec3 colorForFragment(const Scene scene, const vec2 fragCoord) {
 		
 		Ray nextRay;
 #ifdef SOLUTION_REFLECTION_REFRACTION      
-		// Put your code to compute the refraction ray and track the IOR 
 		float n = currentIOR / nextIOR;
 		float cos_theta1 = dot(-currentRay.direction, currentHitInfo.normal);
 		if (cos_theta1 < 0.0) {	// Test if the light is leaving an object
@@ -572,7 +559,6 @@ Material getPaperMaterial() {
 Material getPlasticMaterial() {
 	// Left sphere and front cylinder, orange
 #ifdef SOLUTION_MATERIAL
-	// Replace by your definition of a plastic material
 	return Material(
 		vec3(235.0, 75.0, 20.0)/255.0, // RGB values represent colours 
 		vec3(0.6), 
@@ -589,7 +575,6 @@ Material getPlasticMaterial() {
 Material getGlassMaterial() {
 	// Middle sphere, dark grey
 #ifdef SOLUTION_MATERIAL
-	// Replace by your definition of a glass material
 	return Material(
 		vec3(0.05), 
 		vec3(0.0), 
@@ -606,7 +591,6 @@ Material getGlassMaterial() {
 Material getSteelMirrorMaterial() {
 	//plane
 #ifdef SOLUTION_MATERIAL
-	// Replace by your definition of a steel mirror material
 	return Material(
 		vec3(0.1), 
 		vec3(0.9), 
